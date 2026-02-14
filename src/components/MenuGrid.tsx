@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAppContext } from '@/context/AppContext';
-import { SanityProduct } from '@/lib/sanity/types';
+
 import { ProductCard, ProductCardSkeleton } from '@/components/ProductCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getProducts } from '@/services/menuService';
@@ -90,7 +90,7 @@ export function MenuGrid() {
 
               return (
                 <motion.div
-                  key={plato._id} // Changed to _id for Sanity
+                  key={plato.id}
                   layout
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}

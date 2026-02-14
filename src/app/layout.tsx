@@ -15,8 +15,6 @@ function BrandingWrapper({ children }: { children: React.ReactNode }) {
   return (
     <body 
       style={{ 
-        '--primary': branding.primaryColor,
-        '--background': branding.backgroundColor,
         '--radius-custom': `${branding.borderRadius}px`,
       } as React.CSSProperties}
       className="font-body antialiased selection:bg-primary/30 min-h-screen flex flex-col no-scrollbar"

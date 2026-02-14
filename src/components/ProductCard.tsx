@@ -69,7 +69,7 @@ export function ProductCard({ producto, isLarge = false }: ProductCardProps) {
       style={features.luxuryAnimations ? { x: sx, y: sy } : {}}
       className="h-full"
     >
-      <Link href={`/menu/${producto.id}`} passHref legacyBehavior>
+      <Link href={`/menu/${producto.id}`}>
         <Card 
           className={`relative h-full overflow-hidden group border-none bg-secondary/30 dark:bg-card/60 backdrop-blur-md transition-all duration-700 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.2)] ${!producto.activo ? 'grayscale opacity-60 brightness-75' : ''}`}
           style={{ borderRadius: `var(--radius-custom)` }}

@@ -1,6 +1,9 @@
+
 import type {Metadata} from 'next';
 import './globals.css';
 import { Navbar } from '@/components/navbar';
+import { AppProvider } from '@/context/AppContext';
+import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
   title: 'Mi Cocina Digital',
@@ -20,16 +23,19 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased selection:bg-primary/30 min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <footer className="bg-accent text-accent-foreground py-8 border-t border-border mt-auto">
-          <div className="container mx-auto px-4 text-center">
-            <p className="font-headline text-xl font-bold mb-2">Mi Cocina Digital</p>
-            <p className="opacity-70 text-sm">© {new Date().getFullYear()} - Hecho con amor y tradición.</p>
-          </div>
-        </footer>
+        <AppProvider>
+          <Navbar />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <footer className="bg-accent text-accent-foreground py-8 border-t border-border mt-auto">
+            <div className="container mx-auto px-4 text-center">
+              <p className="font-headline text-xl font-bold mb-2">Mi Cocina Digital</p>
+              <p className="opacity-70 text-sm">© {new Date().getFullYear()} - Hecho con amor y tradición.</p>
+            </div>
+          </footer>
+          <Toaster />
+        </AppProvider>
       </body>
     </html>
   );

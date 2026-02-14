@@ -2,9 +2,27 @@
   "placeholderImages": [
     {
       "id": "hero-restaurant",
-      "description": "A beautiful traditional kitchen scene with fresh ingredients",
+      "description": "Una cocina tradicional con ingredientes frescos",
       "imageUrl": "https://images.unsplash.com/photo-1523039031846-6b3f39302cb8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx0cmFkaXRpb25hbCUyMGtpdGNoZW58ZW58MHx8fHwxNzcxMDkwOTkzfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "traditional kitchen"
+    },
+    {
+      "id": "dish-paella",
+      "description": "Paella de mariscos tradicional",
+      "imageUrl": "https://images.unsplash.com/photo-1534080564607-cc404a2c5410?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+      "imageHint": "paella seafood"
+    },
+    {
+      "id": "dish-tacos",
+      "description": "Tacos al pastor con piña",
+      "imageUrl": "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+      "imageHint": "mexican tacos"
+    },
+    {
+      "id": "dish-pasta",
+      "description": "Pasta artesanal con salsa pomodoro",
+      "imageUrl": "https://images.unsplash.com/photo-1551183053-bf91a1d81141?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+      "imageHint": "italian pasta"
     }
   ]
 }

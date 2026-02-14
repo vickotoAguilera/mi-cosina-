@@ -2,18 +2,19 @@
 'use client';
 
 import { useState } from 'react';
-import { MENU_MOCK } from '@/constants/mockData';
+import { useAppContext } from '@/context/AppContext';
 import { ProductCard } from '@/components/ProductCard';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const CATEGORIAS = ['Todos', 'Entradas', 'Platos Fuertes', 'Postres', 'Bebidas'] as const;
 
 export function MenuGrid() {
+  const { menu } = useAppContext();
   const [categoriaActiva, setCategoriaActiva] = useState<typeof CATEGORIAS[number]>('Todos');
 
   const platosFiltrados = categoriaActiva === 'Todos' 
-    ? MENU_MOCK 
-    : MENU_MOCK.filter(plato => plato.categoria === categoriaActiva);
+    ? menu 
+    : menu.filter(plato => plato.categoria === categoriaActiva);
 
   return (
     <section id="menu" className="py-20 lg:py-32 container mx-auto px-6">
@@ -45,14 +46,14 @@ export function MenuGrid() {
         </div>
       </div>
 
-      {/* Bento Grid Layout - Columna única en móviles */}
+      {/* Bento Grid Layout */}
       <motion.div 
         layout
         className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-6"
       >
         <AnimatePresence mode="popLayout">
           {platosFiltrados.map((plato, idx) => {
-            // Lógica de Bento Grid basada en el índice, solo en escritorio
+            // Lógica de Bento Grid basada en el índice
             let spanClass = "md:col-span-1 md:row-span-1";
             if (idx === 0) spanClass = "md:col-span-2 md:row-span-2";
             if (idx === 2) spanClass = "md:col-span-1 md:row-span-2";

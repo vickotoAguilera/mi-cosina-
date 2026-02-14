@@ -1,5 +1,5 @@
 /**
- * @fileOverview Datos de ejemplo para el menú de Mi Cocina Digital.
+ * @fileOverview Datos de ejemplo extendidos para Mi Cocina Digital con soporte premium.
  */
 
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -9,72 +9,78 @@ export interface MenuItem {
   nombre: string;
   descripcion: string;
   precio: number;
+  precioOferta?: number;
   categoria: 'Entradas' | 'Platos Fuertes' | 'Postres' | 'Bebidas';
-  imagen: string;
+  imagenes: string[]; // [principal, detalle/emplatado, ingredientes]
+  activo: boolean;
   imageHint: string;
 }
 
 const getImage = (id: string) => {
   const img = PlaceHolderImages.find(i => i.id === id);
-  return {
-    url: img?.imageUrl || 'https://picsum.photos/seed/food/600/400',
-    hint: img?.imageHint || 'food'
-  };
+  return img?.imageUrl || 'https://picsum.photos/seed/food/600/400';
 };
 
 export const MENU_MOCK: MenuItem[] = [
   {
     id: '1',
     nombre: 'Paella de la Abuela',
-    descripcion: 'Arroz bomba con mariscos frescos, azafrán y el secreto de la casa.',
+    descripcion: 'Arroz bomba con mariscos frescos, azafrán y el secreto de la casa. Un viaje directo al mediterráneo en cada bocado.',
     precio: 25.50,
+    precioOferta: 22.00,
     categoria: 'Platos Fuertes',
-    imagen: getImage('dish-paella').url,
-    imageHint: getImage('dish-paella').hint
+    imagenes: [getImage('dish-paella'), 'https://picsum.photos/seed/paella2/600/400', 'https://picsum.photos/seed/paella3/600/400'],
+    activo: true,
+    imageHint: 'paella seafood'
   },
   {
     id: '2',
     nombre: 'Tacos al Pastor Especiales',
-    descripcion: 'Tres tacos con carne marinada, piña, cilantro y cebolla.',
+    descripcion: 'Tres tacos con carne marinada en achiote, piña asada, cilantro y cebolla sobre tortilla artesanal.',
     precio: 12.00,
     categoria: 'Entradas',
-    imagen: getImage('dish-tacos').url,
-    imageHint: getImage('dish-tacos').hint
+    imagenes: [getImage('dish-tacos'), 'https://picsum.photos/seed/tacos2/600/400'],
+    activo: true,
+    imageHint: 'mexican tacos'
   },
   {
     id: '3',
     nombre: 'Pasta Carbonara Auténtica',
-    descripcion: 'Pancetta, huevo, queso pecorino romano y pimienta negra.',
+    descripcion: 'Pancetta crujiente, yema de huevo, queso pecorino romano DOP y pimienta negra molida al momento.',
     precio: 18.00,
     categoria: 'Platos Fuertes',
-    imagen: getImage('dish-pasta').url,
-    imageHint: getImage('dish-pasta').hint
+    imagenes: [getImage('dish-pasta'), 'https://picsum.photos/seed/pasta2/600/400'],
+    activo: false,
+    imageHint: 'italian pasta'
   },
   {
     id: '4',
     nombre: 'Ensalada César con Pollo Grill',
-    descripcion: 'Lechuga romana fresca, crotones, parmesano y aderezo césar.',
+    descripcion: 'Lechuga romana orgánica, crotones de pan de masa madre, parmesano y aderezo césar clásico.',
     precio: 15.00,
     categoria: 'Entradas',
-    imagen: getImage('dish-salad').url,
-    imageHint: getImage('dish-salad').hint
+    imagenes: [getImage('dish-salad'), 'https://picsum.photos/seed/salad2/600/400'],
+    activo: true,
+    imageHint: 'caesar salad'
   },
   {
     id: '5',
     nombre: 'Mousse de Chocolate Amargo',
-    descripcion: 'Chocolate 70% cacao con un toque de sal marina y frutos rojos.',
+    descripcion: 'Chocolate 70% cacao con un toque de sal de Maldon, aceite de oliva virgen y frutos rojos de temporada.',
     precio: 8.50,
     categoria: 'Postres',
-    imagen: getImage('dish-dessert').url,
-    imageHint: getImage('dish-dessert').hint
+    imagenes: [getImage('dish-dessert'), 'https://picsum.photos/seed/dessert2/600/400'],
+    activo: true,
+    imageHint: 'chocolate mousse'
   },
   {
     id: '6',
     nombre: 'Limonada de Coco Fresh',
-    descripcion: 'Limón recién exprimido mezclado con leche de coco cremosa.',
+    descripcion: 'Limón recién exprimido mezclado con leche de coco cremosa y hielo frappé.',
     precio: 6.00,
     categoria: 'Bebidas',
-    imagen: getImage('drink-lemonade').url,
-    imageHint: getImage('drink-lemonade').hint
+    imagenes: [getImage('drink-lemonade'), 'https://picsum.photos/seed/drink2/600/400'],
+    activo: true,
+    imageHint: 'coconut drink'
   }
 ];

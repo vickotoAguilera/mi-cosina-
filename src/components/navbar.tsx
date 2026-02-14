@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { UtensilsCrossed, ShoppingCart, UserCog } from 'lucide-react';
+import { UtensilsCrossed, ShoppingCart, UserCog, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAppContext } from '@/context/AppContext';
 import { Badge } from '@/components/ui/badge';
@@ -11,9 +11,10 @@ export function Navbar() {
   const { role, cart, rotateRole, setCartOpen } = useAppContext();
   
   const totalItems = cart.reduce((acc, item) => acc + item.cantidad, 0);
+  const isAdmin = role === 'ADMIN';
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-xl border-b border-border">
+    <nav className="fixed top-0 z-50 w-full bg-background/80 backdrop-blur-xl border-b border-border">
       <div className="container mx-auto px-6 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3 group">
           <UtensilsCrossed className="w-8 h-8 text-primary transition-transform duration-500 group-hover:rotate-[360deg]" />
@@ -26,9 +27,16 @@ export function Navbar() {
           <Link href="/" className="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors">
             Inicio
           </Link>
-          <Link href="#menu" className="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors">
+          <Link href="/#menu" className="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors">
             Menú
           </Link>
+          
+          {isAdmin && (
+            <Link href="/admin" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary hover:text-primary/80 transition-colors">
+              <Settings className="w-4 h-4" />
+              Gestión
+            </Link>
+          )}
           
           <div className="flex items-center gap-4 border-l pl-10 border-border">
             <Badge variant="outline" className="font-bold text-[10px] uppercase tracking-[0.2em] px-3 py-1 border-primary/20 text-primary">

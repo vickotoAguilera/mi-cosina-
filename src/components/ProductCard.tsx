@@ -6,8 +6,9 @@ import { useAppContext } from '@/context/AppContext';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Plus, Edit3, Trash2 } from 'lucide-react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { useRef, useState } from 'react';
+import Link from 'next/link';
 
 interface ProductCardProps {
   producto: MenuItem;
@@ -17,8 +18,8 @@ interface ProductCardProps {
 export function ProductCard({ producto, isLarge = false }: ProductCardProps) {
   const { role, addToCart } = useAppContext();
   const cardRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
   
-  // Efecto Magnet para el botón
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const springConfig = { damping: 15, stiffness: 150 };
@@ -37,32 +38,46 @@ export function ProductCard({ producto, isLarge = false }: ProductCardProps) {
   const handleMouseLeave = () => {
     mouseX.set(0);
     mouseY.set(0);
+    setIsHovered(false);
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
   };
 
   const isAdmin = role === 'ADMIN';
+  const displayImage = isHovered && producto.imagenes.length > 1 ? producto.imagenes[1] : producto.imagenes[0];
 
   return (
     <motion.div
       ref={cardRef}
       onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{ x: sx, y: sy }}
       className="h-full"
     >
-      <Card className="relative h-full overflow-hidden group border-none bg-secondary/30 backdrop-blur-md rounded-[2.5rem] transition-all duration-700 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)]">
+      <Card className={`relative h-full overflow-hidden group border-none bg-secondary/30 backdrop-blur-md rounded-[2.5rem] transition-all duration-700 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] ${!producto.activo ? 'grayscale opacity-60' : ''}`}>
         <div className={`relative w-full ${isLarge ? 'h-full' : 'aspect-[4/5]'} overflow-hidden`}>
           <Image
-            src={producto.imagen}
+            src={displayImage}
             alt={producto.nombre}
             fill
-            className="object-cover transition-transform duration-1000 group-hover:scale-110"
+            className="object-cover transition-all duration-1000 group-hover:scale-110"
             data-ai-hint={producto.imageHint}
           />
           
-          {/* Overlay gradiente premium */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity"></div>
           
-          {/* Información sobre la imagen */}
+          {/* Badge de No Disponible */}
+          {!producto.activo && (
+            <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
+              <span className="font-serif text-white text-lg italic tracking-widest bg-black/40 backdrop-blur-sm px-6 py-2 rounded-full border border-white/10">
+                Agotado temporalmente
+              </span>
+            </div>
+          )}
+
           <div className="absolute inset-x-0 bottom-0 p-8 space-y-4">
             <div className="flex justify-between items-end">
               <div className="space-y-1">
@@ -73,9 +88,14 @@ export function ProductCard({ producto, isLarge = false }: ProductCardProps) {
                   {producto.nombre}
                 </h3>
               </div>
-              <div className="bg-white/10 backdrop-blur-xl px-4 py-2 rounded-2xl border border-white/20">
+              <div className="bg-white/10 backdrop-blur-xl px-4 py-2 rounded-2xl border border-white/20 flex flex-col items-end">
+                {producto.precioOferta && (
+                  <span className="text-[10px] text-white/50 line-through">
+                    ${producto.precio.toFixed(2)}
+                  </span>
+                )}
                 <span className="text-white font-bold tracking-tighter">
-                  ${producto.precio.toFixed(2)}
+                  ${(producto.precioOferta || producto.precio).toFixed(2)}
                 </span>
               </div>
             </div>
@@ -89,13 +109,15 @@ export function ProductCard({ producto, isLarge = false }: ProductCardProps) {
             <div className="pt-2 flex gap-4 items-center">
               {isAdmin ? (
                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="rounded-full bg-white/10 border-white/20 hover:bg-white text-white hover:text-black transition-colors"
-                  >
-                    <Edit3 className="w-4 h-4" strokeWidth={1} />
-                  </Button>
+                  <Link href={`/admin`}>
+                    <Button 
+                      variant="outline" 
+                      size="icon" 
+                      className="rounded-full bg-white/10 border-white/20 hover:bg-white text-white hover:text-black transition-colors"
+                    >
+                      <Edit3 className="w-4 h-4" strokeWidth={1} />
+                    </Button>
+                  </Link>
                   <Button 
                     variant="outline" 
                     size="icon" 
@@ -107,12 +129,13 @@ export function ProductCard({ producto, isLarge = false }: ProductCardProps) {
               ) : (
                 <motion.div 
                   className="w-full"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={producto.activo ? { scale: 1.02 } : {}}
+                  whileTap={producto.activo ? { scale: 0.98 } : {}}
                 >
                   <Button 
-                    className="w-full h-12 rounded-full bg-primary text-white hover:bg-primary/90 transition-all group-hover:shadow-xl group-hover:shadow-primary/20"
-                    onClick={() => addToCart({ ...producto, cantidad: 1 })}
+                    disabled={!producto.activo}
+                    className="w-full h-12 rounded-full bg-primary text-white hover:bg-primary/90 transition-all group-hover:shadow-xl group-hover:shadow-primary/20 disabled:bg-white/10 disabled:text-white/40"
+                    onClick={() => addToCart({ id: producto.id, nombre: producto.nombre, precio: producto.precioOferta || producto.precio, imagen: producto.imagenes[0], cantidad: 1 })}
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Reservar Plato

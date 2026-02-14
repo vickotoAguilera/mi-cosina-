@@ -4,47 +4,45 @@
 
 @layer base {
   :root {
-    --background: 37 58% 93%;
-    --foreground: 233 20% 15%;
+    --background: 40 33% 98%; /* Crema muy claro */
+    --foreground: 220 20% 10%; /* Carbón suave */
     --card: 0 0% 100%;
-    --card-foreground: 233 20% 15%;
+    --card-foreground: 220 20% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 233 20% 15%;
-    --primary: 13 68% 62%;
+    --popover-foreground: 220 20% 10%;
+    --primary: 20 40% 40%; /* Terracota sofisticado */
     --primary-foreground: 0 0% 100%;
-    --secondary: 37 30% 85%;
-    --secondary-foreground: 233 20% 30%;
-    --muted: 37 30% 85%;
-    --muted-foreground: 233 10% 45%;
-    --accent: 233 20% 30%;
-    --accent-foreground: 0 0% 100%;
+    --secondary: 40 20% 90%;
+    --secondary-foreground: 220 20% 20%;
+    --muted: 40 10% 94%;
+    --muted-foreground: 220 10% 40%;
+    --accent: 220 20% 20%;
+    --accent-foreground: 40 33% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 13 20% 85%;
-    --input: 13 20% 85%;
-    --ring: 13 68% 62%;
-    --radius: 0.75rem;
+    --border: 220 10% 90%;
+    --input: 220 10% 90%;
+    --ring: 20 40% 40%;
+    --radius: 1.5rem;
   }
   .dark {
-    --background: 233 20% 10%;
-    --foreground: 37 58% 93%;
-    --card: 233 20% 12%;
-    --card-foreground: 37 58% 93%;
-    --popover: 233 20% 12%;
-    --popover-foreground: 37 58% 93%;
-    --primary: 13 68% 62%;
+    --background: 220 20% 8%; /* Carbón profundo */
+    --foreground: 40 33% 98%;
+    --card: 220 20% 10%;
+    --card-foreground: 40 33% 98%;
+    --popover: 220 20% 10%;
+    --popover-foreground: 40 33% 98%;
+    --primary: 20 60% 60%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 233 15% 20%;
-    --secondary-foreground: 37 58% 93%;
-    --muted: 233 15% 20%;
-    --muted-foreground: 37 20% 65%;
-    --accent: 13 50% 50%;
+    --secondary: 220 15% 15%;
+    --secondary-foreground: 40 33% 98%;
+    --muted: 220 15% 12%;
+    --muted-foreground: 40 10% 70%;
+    --accent: 20 60% 60%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 233 15% 25%;
-    --input: 233 15% 25%;
-    --ring: 13 68% 62%;
+    --border: 220 15% 18%;
+    --input: 220 15% 18%;
+    --ring: 20 60% 60%;
   }
 }
 
@@ -55,5 +53,9 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  h1, h2, h3, .font-serif {
+    font-family: 'Alegreya', serif;
+    letter-spacing: -0.02em;
   }
 }

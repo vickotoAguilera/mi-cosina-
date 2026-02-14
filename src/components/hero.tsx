@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -29,12 +30,13 @@ export function Hero() {
 
   return (
     <section ref={containerRef} className="relative min-h-screen flex items-center overflow-hidden bg-background pt-20">
-      <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-16 items-center">
+      <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        {/* Columna de Texto */}
         <motion.div 
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="space-y-10 z-10"
+          className="space-y-10 z-10 lg:pr-10"
         >
           <motion.div variants={itemVariants} className="inline-block">
             <span className="px-4 py-1.5 rounded-full bg-primary/5 text-primary text-xs font-bold tracking-[0.2em] uppercase border border-primary/10">
@@ -42,7 +44,10 @@ export function Hero() {
             </span>
           </motion.div>
           
-          <motion.h1 variants={itemVariants} className="font-serif text-6xl md:text-8xl lg:text-9xl leading-[0.9] tracking-tighter">
+          <motion.h1 
+            variants={itemVariants} 
+            className="font-serif text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-[0.9] tracking-tighter"
+          >
             Sabor que <br />
             <span className="text-primary italic">trasciende.</span>
           </motion.h1>
@@ -62,11 +67,12 @@ export function Hero() {
           </motion.div>
         </motion.div>
 
+        {/* Columna de Imagen */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.5, ease: "easeOut" }}
-          className="relative aspect-[4/5] lg:aspect-square"
+          className="relative aspect-[4/5] lg:aspect-square w-full"
         >
           <motion.div style={{ y: yParallax }} className="absolute inset-0 rounded-[3rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.25)] border-4 border-white/10">
             {heroImage && (
@@ -89,7 +95,7 @@ export function Hero() {
       </div>
       
       {/* Indicador de scroll */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-30">
         <div className="w-[1px] h-12 bg-gradient-to-b from-transparent via-foreground to-transparent"></div>
         <span className="text-[10px] uppercase tracking-[0.3em]">Scroll</span>
       </div>

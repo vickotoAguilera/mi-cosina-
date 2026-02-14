@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -15,41 +16,43 @@ export function MenuGrid() {
     : MENU_MOCK.filter(plato => plato.categoria === categoriaActiva);
 
   return (
-    <section id="menu" className="py-32 container mx-auto px-4">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
+    <section id="menu" className="py-20 lg:py-32 container mx-auto px-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-10 mb-12 lg:mb-20">
         <div className="space-y-4">
-          <h2 className="text-5xl md:text-7xl font-serif">Nuestra Selección</h2>
-          <p className="text-muted-foreground text-lg max-w-md font-light">
+          <h2 className="text-4xl md:text-7xl font-serif">Nuestra Selección</h2>
+          <p className="text-muted-foreground text-base md:text-lg max-w-md font-light">
             Cada plato es una obra de arte diseñada para despertar los sentidos.
           </p>
         </div>
 
-        {/* Filtros Estilo Glassmorphism */}
-        <div className="flex flex-wrap gap-3 p-2 bg-white/50 dark:bg-black/20 backdrop-blur-xl rounded-2xl border border-white/20 shadow-sm self-start">
-          {CATEGORIAS.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setCategoriaActiva(cat)}
-              className={`px-6 py-2 rounded-xl text-xs font-bold tracking-widest uppercase transition-all duration-500 ${
-                categoriaActiva === cat 
-                  ? 'bg-accent text-accent-foreground shadow-lg' 
-                  : 'hover:bg-primary/5 text-muted-foreground'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+        {/* Filtros Estilo Glassmorphism - Scroll horizontal en móvil */}
+        <div className="flex overflow-x-auto pb-4 md:pb-0 no-scrollbar -mx-6 px-6 md:mx-0 md:px-0">
+          <div className="flex flex-nowrap gap-3 p-2 bg-white/50 dark:bg-black/20 backdrop-blur-xl rounded-2xl border border-white/20 shadow-sm self-start whitespace-nowrap">
+            {CATEGORIAS.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setCategoriaActiva(cat)}
+                className={`px-6 py-2 rounded-xl text-[10px] md:text-xs font-bold tracking-widest uppercase transition-all duration-500 ${
+                  categoriaActiva === cat 
+                    ? 'bg-accent text-accent-foreground shadow-lg' 
+                    : 'hover:bg-primary/5 text-muted-foreground'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Bento Grid Layout */}
+      {/* Bento Grid Layout - Columna única en móviles */}
       <motion.div 
         layout
-        className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-6 min-h-[800px]"
+        className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-6"
       >
         <AnimatePresence mode="popLayout">
           {platosFiltrados.map((plato, idx) => {
-            // Lógica de Bento Grid basada en el índice
+            // Lógica de Bento Grid basada en el índice, solo en escritorio
             let spanClass = "md:col-span-1 md:row-span-1";
             if (idx === 0) spanClass = "md:col-span-2 md:row-span-2";
             if (idx === 2) spanClass = "md:col-span-1 md:row-span-2";

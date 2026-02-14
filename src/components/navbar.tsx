@@ -14,10 +14,10 @@ export function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-border">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+      <div className="container mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
-          <UtensilsCrossed className="w-8 h-8 text-primary transition-transform group-hover:rotate-12" />
-          <span className="font-headline text-2xl font-bold text-foreground">
+          <UtensilsCrossed className="w-7 h-7 lg:w-8 lg:h-8 text-primary transition-transform group-hover:rotate-12" />
+          <span className="font-headline text-xl lg:text-2xl font-bold text-foreground">
             Mi Cocina <span className="text-primary italic">Digital</span>
           </span>
         </Link>
@@ -58,11 +58,18 @@ export function Navbar() {
         </div>
 
         <div className="md:hidden flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={rotateRole} className="text-[10px] font-bold h-8">
+          <Link href="/carrito" className="relative group">
+            <Button variant="ghost" size="icon" className="rounded-full">
+              <ShoppingCart className="w-5 h-5" />
+            </Button>
+            {totalItems > 0 && (
+              <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-full ring-2 ring-background">
+                {totalItems}
+              </span>
+            )}
+          </Link>
+          <Button variant="ghost" size="sm" onClick={rotateRole} className="text-[10px] font-bold h-8 border border-border px-2 rounded-full">
             {role}
-          </Button>
-          <Button variant="ghost" size="icon">
-            <MenuIcon className="w-6 h-6" />
           </Button>
         </div>
       </div>

@@ -23,6 +23,24 @@
       "description": "Pasta artesanal con salsa pomodoro",
       "imageUrl": "https://images.unsplash.com/photo-1551183053-bf91a1d81141?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
       "imageHint": "italian pasta"
+    },
+    {
+      "id": "dish-salad",
+      "description": "Ensalada César fresca con pollo",
+      "imageUrl": "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+      "imageHint": "caesar salad"
+    },
+    {
+      "id": "dish-dessert",
+      "description": "Mousse de chocolate con frutos rojos",
+      "imageUrl": "https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+      "imageHint": "chocolate mousse"
+    },
+    {
+      "id": "drink-lemonade",
+      "description": "Limonada refrescante de coco",
+      "imageUrl": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+      "imageHint": "coconut drink"
     }
   ]
 }

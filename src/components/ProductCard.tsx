@@ -5,7 +5,7 @@ import { MenuItem } from '@/constants/mockData';
 import { useAppContext } from '@/context/AppContext';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Plus, Edit3, Trash2 } from 'lucide-react';
+import { Plus, Edit3, Trash2, Timer } from 'lucide-react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { useRef, useState } from 'react';
 import Link from 'next/link';
@@ -59,7 +59,7 @@ export function ProductCard({ producto, isLarge = false }: ProductCardProps) {
       className="h-full"
     >
       <Card 
-        className={`relative h-full overflow-hidden group border-none bg-secondary/30 backdrop-blur-md transition-all duration-700 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] ${!producto.activo ? 'grayscale opacity-60' : ''}`}
+        className={`relative h-full overflow-hidden group border-none bg-secondary/30 backdrop-blur-md transition-all duration-700 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] ${!producto.activo ? 'grayscale opacity-60 brightness-75' : ''}`}
         style={{ borderRadius: `var(--radius-custom)` }}
       >
         <div className={`relative w-full ${isLarge ? 'h-full' : 'aspect-[4/5]'} overflow-hidden`}>
@@ -74,10 +74,11 @@ export function ProductCard({ producto, isLarge = false }: ProductCardProps) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity"></div>
           
           {!producto.activo && (
-            <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
-              <span className="font-serif text-white text-lg italic tracking-widest bg-black/40 backdrop-blur-sm px-6 py-2 rounded-full border border-white/10">
-                Agotado temporalmente
-              </span>
+            <div className="absolute top-4 right-4">
+              <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md text-white/80 text-xs font-semibold tracking-wider uppercase rounded-full px-4 py-2">
+                <Timer className="w-4 h-4" />
+                <span>Agotado</span>
+              </div>
             </div>
           )}
 

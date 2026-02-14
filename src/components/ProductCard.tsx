@@ -9,6 +9,7 @@ import { Plus, Edit3, Trash2 } from 'lucide-react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { useRef, useState } from 'react';
 import Link from 'next/link';
+import { formatCurrency } from '@/utils/format';
 
 interface ProductCardProps {
   producto: MenuItem;
@@ -69,7 +70,6 @@ export function ProductCard({ producto, isLarge = false }: ProductCardProps) {
           
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity"></div>
           
-          {/* Badge de No Disponible */}
           {!producto.activo && (
             <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
               <span className="font-serif text-white text-lg italic tracking-widest bg-black/40 backdrop-blur-sm px-6 py-2 rounded-full border border-white/10">
@@ -93,11 +93,11 @@ export function ProductCard({ producto, isLarge = false }: ProductCardProps) {
                 <div className="bg-white/10 backdrop-blur-xl px-4 py-2 rounded-2xl border border-white/20 flex flex-col items-end">
                   {producto.precioOferta && (
                     <span className="text-[10px] text-white/50 line-through">
-                      ${producto.precio.toFixed(2)}
+                      {formatCurrency(producto.precio)}
                     </span>
                   )}
                   <span className="text-white font-bold tracking-tighter">
-                    ${(producto.precioOferta || producto.precio).toFixed(2)}
+                    {formatCurrency(producto.precioOferta || producto.precio)}
                   </span>
                 </div>
               )}

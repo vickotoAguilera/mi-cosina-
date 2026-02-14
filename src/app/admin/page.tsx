@@ -4,7 +4,7 @@ import { useAppContext } from '@/context/AppContext';
 import { MenuItem } from '@/constants/mockData';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Edit3, Check, X, Camera, Eye, Power, Settings2, ShoppingCart, DollarSign, Sparkles } from 'lucide-react';
+import { Edit3, Check, X, Power, ShoppingCart, DollarSign, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
+import { formatCurrency } from '@/utils/format';
 
 export default function AdminPage() {
   const { menu, role, updateProduct, features, updateFeature } = useAppContext();
@@ -178,11 +179,11 @@ export default function AdminPage() {
                         <div className="grid grid-cols-2 gap-4 py-4 border-y border-border/50 text-sm">
                           <div>
                             <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Precio</p>
-                            <p className="font-bold">${plato.precio.toFixed(2)}</p>
+                            <p className="font-bold">{formatCurrency(plato.precio)}</p>
                           </div>
                           <div>
                             <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Oferta</p>
-                            <p className="font-bold text-primary">{plato.precioOferta ? `$${plato.precioOferta.toFixed(2)}` : '—'}</p>
+                            <p className="font-bold text-primary">{plato.precioOferta ? formatCurrency(plato.precioOferta) : '—'}</p>
                           </div>
                         </div>
 
@@ -205,7 +206,6 @@ export default function AdminPage() {
 
           <TabsContent value="config">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {/* Card de Carrito */}
               <div className="bg-secondary/20 rounded-[2.5rem] p-8 border border-border flex flex-col justify-between group hover:border-primary/20 transition-all duration-500">
                 <div className="space-y-4">
                   <div className="p-4 bg-primary/10 rounded-2xl w-fit">
@@ -227,7 +227,6 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* Card de Precios */}
               <div className="bg-secondary/20 rounded-[2.5rem] p-8 border border-border flex flex-col justify-between group hover:border-primary/20 transition-all duration-500">
                 <div className="space-y-4">
                   <div className="p-4 bg-primary/10 rounded-2xl w-fit">
@@ -249,7 +248,6 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* Card de Animaciones */}
               <div className="bg-secondary/20 rounded-[2.5rem] p-8 border border-border flex flex-col justify-between group hover:border-primary/20 transition-all duration-500">
                 <div className="space-y-4">
                   <div className="p-4 bg-primary/10 rounded-2xl w-fit">

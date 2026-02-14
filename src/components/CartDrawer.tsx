@@ -6,6 +6,7 @@ import { X, Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
+import { formatCurrency } from '@/utils/format';
 
 export function CartDrawer() {
   const { cart, isCartOpen, setCartOpen, updateQuantity, clearCart, removeFromCart } = useAppContext();
@@ -26,7 +27,6 @@ export function CartDrawer() {
     <AnimatePresence>
       {isCartOpen && (
         <>
-          {/* Overlay */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -35,7 +35,6 @@ export function CartDrawer() {
             className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100]"
           />
 
-          {/* Drawer */}
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
@@ -43,7 +42,6 @@ export function CartDrawer() {
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className="fixed right-0 top-0 h-full w-full max-w-md bg-background shadow-2xl z-[101] flex flex-col border-l border-border"
           >
-            {/* Header */}
             <div className="p-8 border-b border-border flex items-center justify-between">
               <div>
                 <h2 className="text-3xl font-serif">Tu Selección</h2>
@@ -59,7 +57,6 @@ export function CartDrawer() {
               </Button>
             </div>
 
-            {/* List */}
             <div className="flex-grow overflow-y-auto p-8 no-scrollbar">
               {cart.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center space-y-4 opacity-40">
@@ -96,9 +93,8 @@ export function CartDrawer() {
                               <Trash2 className="w-4 h-4 stroke-1" />
                             </button>
                           </div>
-                          <p className="text-sm font-bold text-primary">${(item.precio * item.cantidad).toFixed(2)}</p>
+                          <p className="text-sm font-bold text-primary">{formatCurrency(item.precio * item.cantidad)}</p>
                           
-                          {/* Controles de Cantidad */}
                           <div className="flex items-center gap-3 pt-1">
                             <div className="flex items-center bg-secondary/50 rounded-full border border-border p-1">
                               <button
@@ -124,17 +120,16 @@ export function CartDrawer() {
               )}
             </div>
 
-            {/* Footer */}
             {cart.length > 0 && (
               <div className="p-8 bg-secondary/20 border-t border-border space-y-6">
                 <div className="space-y-2">
                   <div className="flex justify-between text-muted-foreground text-sm uppercase tracking-widest">
                     <span>Subtotal</span>
-                    <span>${total.toFixed(2)}</span>
+                    <span>{formatCurrency(total)}</span>
                   </div>
                   <div className="flex justify-between text-2xl font-serif">
                     <span>Total</span>
-                    <span className="text-primary">${total.toFixed(2)}</span>
+                    <span className="text-primary">{formatCurrency(total)}</span>
                   </div>
                 </div>
 

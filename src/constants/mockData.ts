@@ -1,8 +1,4 @@
-/**
- * @fileOverview Datos de ejemplo extendidos para Mi Cocina Digital con soporte premium y precios en CLP.
- */
-
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+export type Categoria = 'Entradas' | 'Platos Fuertes' | 'Postres' | 'Bebidas';
 
 export interface MenuItem {
   id: string;
@@ -10,77 +6,102 @@ export interface MenuItem {
   descripcion: string;
   precio: number;
   precioOferta?: number;
-  categoria: 'Entradas' | 'Platos Fuertes' | 'Postres' | 'Bebidas';
-  imagenes: string[];
+  categoria: Categoria;
   activo: boolean;
-  imageHint: string;
+  image?: string; // Legacy field
+  mainImage: { // Sanity-like structure
+    asset: {
+      url: string;
+    };
+  };
+  galleryImages?: {
+    asset: {
+      url: string;
+    };
+  }[];
 }
-
-const getImage = (id: string) => {
-  const img = PlaceHolderImages.find(i => i.id === id);
-  return img?.imageUrl || 'https://picsum.photos/seed/food/600/400';
-};
 
 export const MENU_MOCK: MenuItem[] = [
   {
     id: '1',
-    nombre: 'Paella de la Abuela',
-    descripcion: 'Arroz bomba con mariscos frescos, azafrán y el secreto de la casa. Un viaje directo al mediterráneo en cada bocado.',
-    precio: 24900,
-    precioOferta: 21500,
-    categoria: 'Platos Fuertes',
-    imagenes: [getImage('dish-paella'), 'https://picsum.photos/seed/paella2/600/400', 'https://picsum.photos/seed/paella3/600/400'],
+    nombre: 'Ceviche de la Casa',
+    descripcion: 'Nuestro famoso ceviche preparado con corvina fresca, marinada en jugo de limón, ají limo, cebolla roja y cilantro. Servido con camote glaseado y maíz cancha.',
+    precio: 35.00,
+    categoria: 'Entradas',
     activo: true,
-    imageHint: 'paella seafood'
+    mainImage: { asset: { url: '/platos/ceviche-de-la-casa.jpg' } },
   },
   {
     id: '2',
-    nombre: 'Tacos al Pastor Especiales',
-    descripcion: 'Tres tacos con carne marinada en achiote, piña asada, cilantro y cebolla sobre tortilla artesanal.',
-    precio: 12500,
-    categoria: 'Entradas',
-    imagenes: [getImage('dish-tacos'), 'https://picsum.photos/seed/tacos2/600/400'],
+    nombre: 'Lomo Saltado',
+    descripcion: 'Trozos de lomo fino flambeados al wok con cebolla, tomate y ají amarillo. Acompañado de papas fritas y arroz con choclo.',
+    precio: 55.00,
+    precioOferta: 49.50,
+    categoria: 'Platos Fuertes',
     activo: true,
-    imageHint: 'mexican tacos'
+    mainImage: { asset: { url: '/platos/lomo-saltado.jpg' } },
   },
   {
     id: '3',
-    nombre: 'Pasta Carbonara Auténtica',
-    descripcion: 'Pancetta crujiente, yema de huevo, queso pecorino romano DOP y pimienta negra molida al momento.',
-    precio: 18900,
-    categoria: 'Platos Fuertes',
-    imagenes: [getImage('dish-pasta'), 'https://picsum.photos/seed/pasta2/600/400'],
-    activo: false,
-    imageHint: 'italian pasta'
+    nombre: 'Suspiro a la Limeña',
+    descripcion: 'Dulce de manjar blanco cubierto con merengue al oporto. Un postre clásico que te transportará a la Lima de antaño.',
+    precio: 25.00,
+    categoria: 'Postres',
+    activo: true,
+    mainImage: { asset: { url: '/platos/suspiro-limena.jpg' } },
   },
   {
     id: '4',
-    nombre: 'Ensalada César con Pollo Grill',
-    descripcion: 'Lechuga romana orgánica, crotones de pan de masa madre, parmesano y aderezo césar clásico.',
-    precio: 14500,
-    categoria: 'Entradas',
-    imagenes: [getImage('dish-salad'), 'https://picsum.photos/seed/salad2/600/400'],
+    nombre: 'Pisco Sour',
+    descripcion: 'El cóctel bandera de Perú. Preparado con pisco quebranta, jugo de limón recién exprimido, jarabe de goma y clara de huevo.',
+    precio: 28.00,
+    categoria: 'Bebidas',
     activo: true,
-    imageHint: 'caesar salad'
+    mainImage: { asset: { url: '/platos/pisco-sour.jpg' } },
   },
   {
     id: '5',
-    nombre: 'Mousse de Chocolate Amargo',
-    descripcion: 'Chocolate 70% cacao con un toque de sal de Maldon, aceite de oliva virgen y frutos rojos de temporada.',
-    precio: 8900,
-    categoria: 'Postres',
-    imagenes: [getImage('dish-dessert'), 'https://picsum.photos/seed/dessert2/600/400'],
+    nombre: 'Causa Limeña',
+    descripcion: 'Suave puré de papa amarilla sazonado con ají amarillo y limón, relleno de pollo deshilachado y mayonesa casera.',
+    precio: 30.00,
+    categoria: 'Entradas',
     activo: true,
-    imageHint: 'chocolate mousse'
+    mainImage: { asset: { url: '/platos/causa-limena.jpg' } },
   },
   {
     id: '6',
-    nombre: 'Limonada de Coco Fresh',
-    descripcion: 'Limón recién exprimido mezclado con leche de coco cremosa y hielo frappé.',
-    precio: 5500,
-    categoria: 'Bebidas',
-    imagenes: [getImage('drink-lemonade'), 'https://picsum.photos/seed/drink2/600/400'],
+    nombre: 'Ají de Gallina',
+    descripcion: 'Pechuga de gallina deshilachada en una cremosa salsa de ají amarillo, pan y leche. Servido con papas, huevo y aceitunas.',
+    precio: 45.00,
+    categoria: 'Platos Fuertes',
+    activo: false,
+    mainImage: { asset: { url: '/platos/aji-de-gallina.jpg' } },
+  },
+  {
+    id: '7',
+    nombre: 'Arroz con Pato',
+    descripcion: 'Jugoso pato cocido lentamente en cerveza negra y culantro, servido sobre un delicioso arroz verde con arvejas y pimientos.',
+    precio: 65.00,
+    categoria: 'Platos Fuertes',
     activo: true,
-    imageHint: 'coconut drink'
-  }
+    mainImage: { asset: { url: '/platos/arroz-con-pato.jpg' } },
+  },
+];
+
+export interface Reserva {
+    id: string;
+    fecha: string; // YYYY-MM-DD
+    hora: string; // HH:mm
+    personas: number;
+    cliente: {
+        nombre: string;
+        email?: string;
+    };
+    estado: 'confirmada' | 'pendiente' | 'cancelada';
+}
+
+// Fecha en formato YYYY-MM-DD para compatibilidad con el calendario
+export const RESERVAS_OCUPADAS: Pick<Reserva, 'fecha' | 'hora'>[] = [
+    { fecha: new Date().toISOString().split('T')[0], hora: '20:00' },
+    { fecha: new Date().toISOString().split('T')[0], hora: '20:30' },
 ];

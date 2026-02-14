@@ -1,0 +1,7 @@
+PROYECTO DIY-FLOW (BLOG INTERACTIVO):
+Una plataforma donde las personas puedan compartir recetas o tutoriales paso a paso de forma visual e interactiva.
+Ejemplo: Como construir un auto de madera para un hijo.
+La interfaz debe permitir que el lector marque los pasos completados y vea el progreso de la construccion o receta.
+
+PROYECTO SMART-TABLE:
+El sistema avanzado de pedidos por mesa mediante codigos QR que decidimos separar de la plantilla basica para convertirlo en una aplicacion de gestion mas robusta para restaurantes de alta rotacion.

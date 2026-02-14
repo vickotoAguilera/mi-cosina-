@@ -26,6 +26,28 @@
     --ring: 20 40% 40%;
     --radius: var(--radius-custom, 1.5rem);
   }
+
+  .dark {
+    --background: 220 25% 10%; /* Azul noche profundo */
+    --foreground: 40 30% 90%; /* Crema suave */
+    --card: 220 25% 15%;
+    --card-foreground: 40 30% 90%;
+    --popover: 220 25% 12%;
+    --popover-foreground: 40 30% 90%;
+    --primary: var(--brand-primary, #a86c52); /* Terracota más brillante */
+    --primary-foreground: 220 20% 5%;
+    --secondary: 220 20% 25%;
+    --secondary-foreground: 40 30% 90%;
+    --muted: 220 20% 20%;
+    --muted-foreground: 220 10% 60%;
+    --accent: 40 30% 90%;
+    --accent-foreground: 220 25% 10%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 20% 25%;
+    --input: 220 20% 25%;
+    --ring: 20 50% 55%;
+  }
 }
 
 @layer base {
@@ -33,9 +55,10 @@
     @apply border-border;
   }
   body {
-    background-color: var(--background);
+    background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     font-feature-settings: "rlig" 1, "calt" 1;
+    transition: background-color 0.5s ease, color 0.5s ease;
   }
   h1, h2, h3, .font-serif {
     font-family: 'Alegreya', serif;
@@ -52,5 +75,19 @@
   }
   .rounded-custom {
     border-radius: var(--radius-custom) !important;
+  }
+}
+
+@layer components {
+  .dark .backdrop-blur-xl {
+    --tw-backdrop-blur: blur(24px);
+  }
+
+  .dark .shadow-lg {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+  }
+
+  .dark .shadow-2xl {
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
   }
 }

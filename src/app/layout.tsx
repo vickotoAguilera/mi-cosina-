@@ -5,9 +5,12 @@ import { Navbar } from '@/components/navbar';
 import { AppProvider, useAppContext } from '@/context/AppContext';
 import { Toaster } from '@/components/ui/toaster';
 import { CartDrawer } from '@/components/CartDrawer';
+import { AnimatePresence } from 'framer-motion';
+import { usePathname } from 'next/navigation';
 
 function BrandingWrapper({ children }: { children: React.ReactNode }) {
   const { branding } = useAppContext();
+  const pathname = usePathname();
 
   return (
     <body 
@@ -19,9 +22,13 @@ function BrandingWrapper({ children }: { children: React.ReactNode }) {
       className="font-body antialiased selection:bg-primary/30 min-h-screen flex flex-col no-scrollbar"
     >
       <Navbar />
-      <main className="flex-grow">
-        {children}
-      </main>
+        <main className="flex-grow">
+          <AnimatePresence mode="wait">
+            <div key={pathname}>
+              {children}
+            </div>
+          </AnimatePresence>
+        </main>
       <footer className="bg-accent text-accent-foreground py-16 border-t border-white/5 mt-auto">
         <div className="container mx-auto px-6 text-center">
           <p className="font-serif text-3xl font-bold mb-4 tracking-tighter">Mi Cocina Digital</p>

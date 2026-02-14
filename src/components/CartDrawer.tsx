@@ -2,26 +2,16 @@
 
 import { useAppContext } from '@/context/AppContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
+import { X, Minus, Plus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { useToast } from '@/hooks/use-toast';
 import { formatCurrency } from '@/utils/format';
+import Link from 'next/link';
 
 export function CartDrawer() {
-  const { cart, isCartOpen, setCartOpen, updateQuantity, clearCart, removeFromCart } = useAppContext();
-  const { toast } = useToast();
+  const { cart, isCartOpen, setCartOpen, updateQuantity, clearCart, removeFromCart, subtotal, iva, total, branding, features } = useAppContext();
 
-  const total = cart.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
-
-  const handleCheckout = () => {
-    toast({
-      title: "Reserva confirmada",
-      description: "Tu pedido está siendo procesado por nuestros chefs.",
-    });
-    clearCart();
-    setCartOpen(false);
-  };
+  if (!features.enableCart) return null;
 
   return (
     <AnimatePresence>
@@ -93,7 +83,7 @@ export function CartDrawer() {
                               <Trash2 className="w-4 h-4 stroke-1" />
                             </button>
                           </div>
-                          <p className="text-sm font-bold text-primary">{formatCurrency(item.precio * item.cantidad)}</p>
+                          <p className="text-sm font-bold" style={{ color: branding.primaryColor }}>{formatCurrency(item.precio * item.cantidad)}</p>
                           
                           <div className="flex items-center gap-3 pt-1">
                             <div className="flex items-center bg-secondary/50 rounded-full border border-border p-1">
@@ -122,24 +112,32 @@ export function CartDrawer() {
 
             {cart.length > 0 && (
               <div className="p-8 bg-secondary/20 border-t border-border space-y-6">
-                <div className="space-y-2">
-                  <div className="flex justify-between text-muted-foreground text-sm uppercase tracking-widest">
+                <div className="space-y-3 font-medium">
+                  <div className="flex justify-between text-muted-foreground text-sm">
                     <span>Subtotal</span>
-                    <span>{formatCurrency(total)}</span>
+                    <span>{formatCurrency(subtotal)}</span>
                   </div>
-                  <div className="flex justify-between text-2xl font-serif">
+                  <div className="flex justify-between text-muted-foreground text-sm">
+                    <span>IVA (19%)</span>
+                    <span>{formatCurrency(iva)}</span>
+                  </div>
+                  <div className="flex justify-between text-xl font-bold">
                     <span>Total</span>
-                    <span className="text-primary">{formatCurrency(total)}</span>
+                    <span style={{ color: branding.primaryColor }}>{formatCurrency(total)}</span>
                   </div>
                 </div>
 
                 <div className="space-y-4">
-                  <Button 
-                    className="w-full h-16 rounded-full text-lg font-medium bg-accent text-accent-foreground hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-accent/20"
-                    onClick={handleCheckout}
-                  >
-                    Continuar al Pago
-                  </Button>
+                  <Link href="/checkout" passHref>
+                    <Button 
+                      className="w-full h-14 rounded-full text-lg font-bold transition-all shadow-lg hover:shadow-xl active:scale-[0.98]"
+                      style={{ backgroundColor: branding.primaryColor }}
+                      onClick={() => setCartOpen(false)}
+                    >
+                      Finalizar Pedido
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                    </Button>
+                  </Link>
                   <button 
                     onClick={clearCart}
                     className="w-full text-xs uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors font-bold"

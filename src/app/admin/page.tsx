@@ -1,7 +1,8 @@
 'use client';
 
+import AdminGuard from '@/components/AdminGuard';
 import { useAppContext } from '@/context/AppContext';
-import { MenuItem } from '@/constants/mockData';
+import { SanityProduct } from '@/lib/sanity/types';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Edit3, Check, X, Power, ShoppingCart, DollarSign, Sparkles, Palette, Type, Layout } from 'lucide-react';
@@ -16,26 +17,14 @@ import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 import { formatCurrency } from '@/utils/format';
 
-export default function AdminPage() {
-  const { menu, role, updateProduct, features, updateFeature, branding, updateBranding } = useAppContext();
+function AdminPageContent() {
+  const { menu, updateProduct, features, updateFeature, branding, updateBranding } = useAppContext();
   const { toast } = useToast();
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState<MenuItem | null>(null);
+  const [formData, setFormData] = useState<SanityProduct | null>(null);
 
-  if (role !== 'ADMIN') {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-6 text-center">
-        <div className="space-y-4">
-          <h1 className="text-4xl font-serif">Acceso Restringido</h1>
-          <p className="text-muted-foreground">Debes tener el rol de Administrador para ver esta sección.</p>
-          <Button onClick={() => window.location.href = '/'} variant="outline" className="rounded-full">Volver al Inicio</Button>
-        </div>
-      </div>
-    );
-  }
-
-  const handleEdit = (plato: MenuItem) => {
-    setEditingId(plato.id);
+  const handleEdit = (plato: SanityProduct) => {
+    setEditingId(plato._id);
     setFormData({ ...plato });
   };
 
@@ -67,7 +56,7 @@ export default function AdminPage() {
         </header>
 
         <Tabs defaultValue="menu" className="space-y-12">
-          <TabsList className="bg-secondary/30 p-1 rounded-full border border-border h-12 inline-flex items-center">
+          <TabsList className="bg-secondary/30 dark:bg-card/60 p-1 rounded-full border border-border h-12 inline-flex items-center">
             <TabsTrigger value="menu" className="rounded-full px-8 h-10 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">Gestión de Tesoros</TabsTrigger>
             <TabsTrigger value="branding" className="rounded-full px-8 h-10 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">Identidad Visual</TabsTrigger>
             <TabsTrigger value="config" className="rounded-full px-8 h-10 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">Ajustes de Plantilla</TabsTrigger>
@@ -78,17 +67,17 @@ export default function AdminPage() {
               <AnimatePresence mode="popLayout">
                 {menu.map((plato) => (
                   <motion.div
-                    key={plato.id}
+                    key={plato._id}
                     layout
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="group relative"
                   >
-                    {editingId === plato.id ? (
+                    {editingId === plato._id ? (
                       <motion.div 
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="bg-white dark:bg-zinc-900 rounded-[2.5rem] p-8 border border-primary/20 shadow-2xl space-y-6 z-10"
+                        className="bg-card dark:bg-zinc-900 rounded-[2.5rem] p-8 border border-primary/20 shadow-2xl space-y-6 z-10"
                         style={{ borderRadius: `var(--radius-custom)` }}
                       >
                         <div className="space-y-4">
@@ -97,7 +86,7 @@ export default function AdminPage() {
                             <Input 
                               value={formData?.nombre} 
                               onChange={(e) => setFormData(f => f ? {...f, nombre: e.target.value} : null)}
-                              className="rounded-xl border-border bg-secondary/20"
+                              className="rounded-xl border-border bg-secondary/20 dark:bg-background/40"
                             />
                           </div>
 
@@ -106,7 +95,7 @@ export default function AdminPage() {
                             <Textarea 
                               value={formData?.descripcion} 
                               onChange={(e) => setFormData(f => f ? {...f, descripcion: e.target.value} : null)}
-                              className="rounded-xl border-border bg-secondary/20 min-h-[100px]"
+                              className="rounded-xl border-border bg-secondary/20 dark:bg-background/40 min-h-[100px]"
                             />
                           </div>
 
@@ -117,7 +106,7 @@ export default function AdminPage() {
                                 type="number"
                                 value={formData?.precio} 
                                 onChange={(e) => setFormData(f => f ? {...f, precio: parseFloat(e.target.value)} : null)}
-                                className="rounded-xl border-border bg-secondary/20"
+                                className="rounded-xl border-border bg-secondary/20 dark:bg-background/40"
                               />
                             </div>
                             <div className="space-y-2">
@@ -127,12 +116,12 @@ export default function AdminPage() {
                                 placeholder="Opcional"
                                 value={formData?.precioOferta || ''} 
                                 onChange={(e) => setFormData(f => f ? {...f, precioOferta: e.target.value ? parseFloat(e.target.value) : undefined} : null)}
-                                className="rounded-xl border-border bg-secondary/20"
+                                className="rounded-xl border-border bg-secondary/20 dark:bg-background/40"
                               />
                             </div>
                           </div>
 
-                          <div className="flex items-center justify-between p-4 bg-secondary/30 rounded-2xl border border-border">
+                          <div className="flex items-center justify-between p-4 bg-secondary/30 dark:bg-background/40 rounded-2xl border border-border">
                             <div className="space-y-0.5">
                               <Label className="text-xs font-bold">Estado del Plato</Label>
                               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Activo en el menú</p>
@@ -155,12 +144,12 @@ export default function AdminPage() {
                       </motion.div>
                     ) : (
                       <div 
-                        className="bg-secondary/20 p-6 border border-border hover:border-primary/20 transition-all duration-500 overflow-hidden"
+                        className="bg-secondary/30 dark:bg-card/60 p-6 border border-border hover:border-primary/20 transition-all duration-500 overflow-hidden"
                         style={{ borderRadius: `var(--radius-custom)` }}
                       >
                         <div className="flex gap-4 mb-6">
                           <div className="relative w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0 border border-border">
-                            <Image src={plato.imagenes[0]} alt={plato.nombre} fill className="object-cover" />
+                            <Image src={plato.mainImage.asset.url} alt={plato.nombre} fill className="object-cover" />
                             {!plato.activo && (
                               <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                                 <Power className="w-6 h-6 text-white/60" strokeWidth={1.5} />
@@ -175,7 +164,7 @@ export default function AdminPage() {
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${plato.activo ? 'border-green-500/20 text-green-600' : 'border-red-500/20 text-red-500'}`}>
+                              <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${plato.activo ? 'border-green-500/20 text-green-600 dark:text-green-400' : 'border-red-500/20 text-red-500 dark:text-red-400'}`}>
                                 {plato.activo ? 'Activo' : 'Inactivo'}
                               </span>
                             </div>
@@ -226,12 +215,12 @@ export default function AdminPage() {
                           type="color" 
                           value={branding.primaryColor}
                           onChange={(e) => updateBranding({ primaryColor: e.target.value })}
-                          className="w-16 h-12 p-1 rounded-lg cursor-pointer bg-secondary/30"
+                          className="w-16 h-12 p-1 rounded-lg cursor-pointer bg-secondary/30 dark:bg-card/60"
                         />
                         <Input 
                           value={branding.primaryColor}
                           onChange={(e) => updateBranding({ primaryColor: e.target.value })}
-                          className="flex-grow rounded-xl bg-secondary/30"
+                          className="flex-grow rounded-xl bg-secondary/30 dark:bg-card/60"
                         />
                       </div>
                     </div>
@@ -242,12 +231,12 @@ export default function AdminPage() {
                           type="color" 
                           value={branding.backgroundColor}
                           onChange={(e) => updateBranding({ backgroundColor: e.target.value })}
-                          className="w-16 h-12 p-1 rounded-lg cursor-pointer bg-secondary/30"
+                          className="w-16 h-12 p-1 rounded-lg cursor-pointer bg-secondary/30 dark:bg-card/60"
                         />
                         <Input 
                           value={branding.backgroundColor}
                           onChange={(e) => updateBranding({ backgroundColor: e.target.value })}
-                          className="flex-grow rounded-xl bg-secondary/30"
+                          className="flex-grow rounded-xl bg-secondary/30 dark:bg-card/60"
                         />
                       </div>
                     </div>
@@ -259,7 +248,7 @@ export default function AdminPage() {
                     <Layout className="w-6 h-6 text-primary" strokeWidth={1.5} />
                     <h3 className="text-2xl font-serif">Formas y Bordes</h3>
                   </div>
-                  <div className="space-y-6 bg-secondary/20 p-8 rounded-[2.5rem] border border-border">
+                  <div className="space-y-6 bg-secondary/30 dark:bg-card/60 p-8 rounded-[2.5rem] border border-border">
                     <div className="flex justify-between items-center mb-4">
                       <Label className="text-xs font-bold uppercase tracking-widest">Redondeo Global</Label>
                       <span className="text-xs font-mono font-bold bg-primary/10 text-primary px-3 py-1 rounded-full">
@@ -291,21 +280,21 @@ export default function AdminPage() {
                       placeholder="https://tu-logo.com/logo.png"
                       value={branding.logoUrl}
                       onChange={(e) => updateBranding({ logoUrl: e.target.value })}
-                      className="rounded-xl bg-secondary/30 h-12"
+                      className="rounded-xl bg-secondary/30 dark:bg-card/60 h-12"
                     />
                     <p className="text-[10px] text-muted-foreground italic">Si se deja vacío, se mostrará el icono por defecto.</p>
                   </div>
                 </section>
               </div>
 
-              <div className="bg-secondary/10 rounded-[3rem] border border-dashed border-border p-8 flex flex-col items-center justify-center text-center space-y-8 h-fit sticky top-32">
+              <div className="bg-secondary/30 dark:bg-card/60 rounded-[3rem] border border-dashed border-border p-8 flex flex-col items-center justify-center text-center space-y-8 h-fit sticky top-32">
                 <p className="text-[10px] uppercase tracking-[0.3em] font-bold opacity-40">Vista Previa de Tarjeta</p>
                 <div 
-                  className="w-full max-w-sm aspect-[4/5] bg-white dark:bg-zinc-900 shadow-2xl overflow-hidden group"
+                  className="w-full max-w-sm bg-card dark:bg-zinc-900 shadow-2xl overflow-hidden group"
                   style={{ borderRadius: `${branding.borderRadius}px` }}
                 >
                   <div className="h-2/3 bg-muted relative">
-                    <Image src={menu[0].imagenes[0]} alt="Preview" fill className="object-cover" />
+                    {menu.length > 0 && <Image src={menu[0].mainImage.asset.url} alt="Preview" fill className="object-cover" />}
                   </div>
                   <div className="p-6 space-y-3 text-left">
                     <div 
@@ -334,7 +323,7 @@ export default function AdminPage() {
           <TabsContent value="config">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <div 
-                className="bg-secondary/20 p-8 border border-border flex flex-col justify-between group hover:border-primary/20 transition-all duration-500"
+                className="bg-secondary/30 dark:bg-card/60 p-8 border border-border flex flex-col justify-between group hover:border-primary/20 transition-all duration-500"
                 style={{ borderRadius: `var(--radius-custom)` }}
               >
                 <div className="space-y-4">
@@ -358,7 +347,7 @@ export default function AdminPage() {
               </div>
 
               <div 
-                className="bg-secondary/20 p-8 border border-border flex flex-col justify-between group hover:border-primary/20 transition-all duration-500"
+                className="bg-secondary/30 dark:bg-card/60 p-8 border border-border flex flex-col justify-between group hover:border-primary/20 transition-all duration-500"
                 style={{ borderRadius: `var(--radius-custom)` }}
               >
                 <div className="space-y-4">
@@ -382,7 +371,7 @@ export default function AdminPage() {
               </div>
 
               <div 
-                className="bg-secondary/20 p-8 border border-border flex flex-col justify-between group hover:border-primary/20 transition-all duration-500"
+                className="bg-secondary/30 dark:bg-card/60 p-8 border border-border flex flex-col justify-between group hover:border-primary/20 transition-all duration-500"
                 style={{ borderRadius: `var(--radius-custom)` }}
               >
                 <div className="space-y-4">
@@ -409,5 +398,13 @@ export default function AdminPage() {
         </Tabs>
       </div>
     </div>
+  );
+}
+
+export default function AdminPage() {
+  return (
+    <AdminGuard>
+      <AdminPageContent />
+    </AdminGuard>
   );
 }

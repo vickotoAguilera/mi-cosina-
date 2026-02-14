@@ -1,16 +1,37 @@
-
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAppContext } from '@/context/AppContext';
-import { ProductCard } from '@/components/ProductCard';
+import { SanityProduct } from '@/lib/sanity/types';
+import { ProductCard, ProductCardSkeleton } from '@/components/ProductCard';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getProducts } from '@/services/menuService';
 
 const CATEGORIAS = ['Todos', 'Entradas', 'Platos Fuertes', 'Postres', 'Bebidas'] as const;
 
 export function MenuGrid() {
-  const { menu } = useAppContext();
+  const { menu, setMenu } = useAppContext();
   const [categoriaActiva, setCategoriaActiva] = useState<typeof CATEGORIAS[number]>('Todos');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMenu = async () => {
+      if(menu.length > 0) {
+        setIsLoading(false);
+        return;
+      }
+      setIsLoading(true);
+      try {
+        const products = await getProducts();
+        setMenu(products);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+        // Optionally, set an error state to show in the UI
+      }
+      setIsLoading(false);
+    };
+    fetchMenu();
+  }, [setMenu, menu.length]);
 
   const platosFiltrados = categoriaActiva === 'Todos' 
     ? menu 
@@ -26,7 +47,6 @@ export function MenuGrid() {
           </p>
         </div>
 
-        {/* Filtros Estilo Glassmorphism - Scroll horizontal en móvil */}
         <div className="flex overflow-x-auto pb-4 md:pb-0 no-scrollbar -mx-6 px-6 md:mx-0 md:px-0">
           <div className="flex flex-nowrap gap-3 p-2 bg-white/50 dark:bg-black/20 backdrop-blur-xl rounded-2xl border border-white/20 shadow-sm self-start whitespace-nowrap">
             {CATEGORIAS.map((cat) => (
@@ -46,36 +66,47 @@ export function MenuGrid() {
         </div>
       </div>
 
-      {/* Bento Grid Layout */}
       <motion.div 
         layout
         className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-6"
       >
-        <AnimatePresence mode="popLayout">
-          {platosFiltrados.map((plato, idx) => {
-            // Lógica de Bento Grid basada en el índice
+        {isLoading ? (
+          Array.from({ length: 5 }).map((_, idx) => {
             let spanClass = "md:col-span-1 md:row-span-1";
             if (idx === 0) spanClass = "md:col-span-2 md:row-span-2";
             if (idx === 2) spanClass = "md:col-span-1 md:row-span-2";
-
             return (
-              <motion.div
-                key={plato.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-                className={spanClass}
-              >
-                <ProductCard producto={plato} isLarge={idx === 0} />
-              </motion.div>
+              <div key={idx} className={spanClass}>
+                <ProductCardSkeleton isLarge={idx === 0} />
+              </div>
             );
-          })}
-        </AnimatePresence>
+          })
+        ) : (
+          <AnimatePresence mode="popLayout">
+            {platosFiltrados.map((plato, idx) => {
+              let spanClass = "md:col-span-1 md:row-span-1";
+              if (idx === 0) spanClass = "md:col-span-2 md:row-span-2";
+              if (idx === 2) spanClass = "md:col-span-1 md:row-span-2";
+
+              return (
+                <motion.div
+                  key={plato._id} // Changed to _id for Sanity
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+                  className={spanClass}
+                >
+                  <ProductCard producto={plato} isLarge={idx === 0} />
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        )}
       </motion.div>
 
-      {platosFiltrados.length === 0 && (
+      {!isLoading && platosFiltrados.length === 0 && (
         <div className="text-center py-40 bg-muted/20 rounded-[3rem] border border-dashed">
           <p className="text-muted-foreground font-serif text-2xl italic">No se encontraron tesoros en esta categoría.</p>
         </div>

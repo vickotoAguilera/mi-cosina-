@@ -1,15 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { UtensilsCrossed, ShoppingCart, UserCog, Settings } from 'lucide-react';
+import { UtensilsCrossed, ShoppingCart, UserCog, Settings, LogIn, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useAppContext } from '@/context/AppContext';
+import { useAuth } from '@/lib/authProvider';
 import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 
 export function Navbar() {
-  const { role, cart, rotateRole, setCartOpen, features, branding } = useAppContext();
+  const { cart, rotateRole, setCartOpen, features, branding, role, user, isAuthenticated, loginWithGoogle, logout } = useAuth();
   
   const totalItems = cart.reduce((acc, item) => acc + item.cantidad, 0);
   const isAdmin = role === 'ADMIN';
@@ -20,12 +22,12 @@ export function Navbar() {
         <Link href="/" className="flex items-center gap-3 group">
           {branding.logoUrl ? (
             <div className="relative w-10 h-10 overflow-hidden rounded-lg">
-              <Image src={branding.logoUrl} alt="Logo" fill className="object-contain" />
+              <Image src={branding.logoUrl} alt="Logo" fill className="object-contain dark:invert" />
             </div>
           ) : (
             <UtensilsCrossed className="w-8 h-8 text-primary transition-transform duration-500 group-hover:rotate-[360deg]" />
           )}
-          <span className="font-serif text-2xl lg:text-3xl font-bold text-foreground tracking-tighter">
+          <span className="font-serif text-2xl lg:text-3xl font-bold text-foreground dark:text-white tracking-tighter">
             Mi Cocina <span className="text-primary italic">Digital</span>
           </span>
         </Link>
@@ -46,6 +48,25 @@ export function Navbar() {
           )}
           
           <div className="flex items-center gap-4 border-l pl-10 border-border">
+            <ThemeSwitcher />
+            {isAuthenticated && user ? (
+              <div className="flex items-center gap-4">
+                <Avatar className="w-10 h-10 border-2 border-primary/50">
+                  <AvatarImage src={user.picture} alt={user.name} />
+                  <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <Button onClick={logout} variant="ghost" size="sm">
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Salir
+                </Button>
+              </div>
+            ) : (
+              <Button onClick={loginWithGoogle} variant="outline" className="rounded-full">
+                <LogIn className="w-4 h-4 mr-2" />
+                Entrar con Google
+              </Button>
+            )}
+
             <Badge variant="outline" className="font-bold text-[10px] uppercase tracking-[0.2em] px-3 py-1 border-primary/20 text-primary">
               {role}
             </Badge>
@@ -86,6 +107,7 @@ export function Navbar() {
 
         {/* Móvil */}
         <div className="md:hidden flex items-center gap-4">
+          <ThemeSwitcher />
           {features.enableCart && (
             <button 
               onClick={() => setCartOpen(true)}

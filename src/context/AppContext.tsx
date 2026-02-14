@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
@@ -16,9 +15,12 @@ export interface CartItem {
 interface AppContextType {
   role: UserRole;
   cart: CartItem[];
+  isCartOpen: boolean;
   setRole: (role: UserRole) => void;
+  setCartOpen: (open: boolean) => void;
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: string) => void;
+  updateQuantity: (id: string, delta: number) => void;
   clearCart: () => void;
   rotateRole: () => void;
 }
@@ -28,9 +30,9 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppProvider({ children }: { children: ReactNode }) {
   const [role, setRoleState] = useState<UserRole>('GUEST');
   const [cart, setCartState] = useState<CartItem[]>([]);
+  const [isCartOpen, setCartOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // Cargar datos del localStorage al iniciar (solo en cliente)
   useEffect(() => {
     const savedRole = localStorage.getItem('mc_role') as UserRole;
     const savedCart = localStorage.getItem('mc_cart');
@@ -41,7 +43,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setIsHydrated(true);
   }, []);
 
-  // Guardar cambios en localStorage
   useEffect(() => {
     if (isHydrated) {
       localStorage.setItem('mc_role', role);
@@ -66,6 +67,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, newItem];
     });
+    setCartOpen(true); // Abrir automáticamente al añadir
+  };
+
+  const updateQuantity = (id: string, delta: number) => {
+    setCartState(prev => prev.map(item => {
+      if (item.id === id) {
+        const newQty = Math.max(0, item.cantidad + delta);
+        return { ...item, cantidad: newQty };
+      }
+      return item;
+    }).filter(item => item.cantidad > 0));
   };
 
   const removeFromCart = (id: string) => {
@@ -75,7 +87,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const clearCart = () => setCartState([]);
 
   return (
-    <AppContext.Provider value={{ role, cart, setRole, addToCart, removeFromCart, clearCart, rotateRole }}>
+    <AppContext.Provider value={{ 
+      role, 
+      cart, 
+      isCartOpen, 
+      setRole, 
+      setCartOpen, 
+      addToCart, 
+      removeFromCart, 
+      updateQuantity, 
+      clearCart, 
+      rotateRole 
+    }}>
       {children}
     </AppContext.Provider>
   );

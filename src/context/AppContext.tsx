@@ -1,31 +1,8 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { MenuItem } from '@/constants/mockData';
+import { MenuItem, UserRole, User, CartItem, BrandingConfig } from '@/types';
 import { AppFeatures, INITIAL_FEATURES } from '@/config/appFeatures';
-
-export type UserRole = 'GUEST' | 'USER' | 'ADMIN';
-export type Theme = 'light' | 'dark';
-
-export interface User {
-  name: string;
-  picture: string;
-}
-
-export interface CartItem {
-  id: string;
-  nombre: string;
-  precio: number;
-  cantidad: number;
-  imagen: string;
-}
-
-export interface BrandingConfig {
-  primaryColor: string;
-  backgroundColor: string;
-  borderRadius: number;
-  logoUrl: string;
-}
 
 const INITIAL_BRANDING: BrandingConfig = {
   primaryColor: '#8a4b38',

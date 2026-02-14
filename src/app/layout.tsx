@@ -1,44 +1,41 @@
-'use client';
 
-import './globals.css';
-import { Navbar } from '@/components/navbar';
-import { AppProvider, useAppContext } from '@/context/AppContext';
-import { Toaster } from '@/components/ui/toaster';
-import { CartDrawer } from '@/components/CartDrawer';
-import { AnimatePresence } from 'framer-motion';
-import { usePathname } from 'next/navigation';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/layout/footer";
 
-function BrandingWrapper({ children }: { children: React.ReactNode }) {
-  const { branding } = useAppContext();
-  const pathname = usePathname();
+const inter = Inter({ subsets: ["latin"] });
 
-  return (
-    <body 
-      style={{ 
-        '--radius-custom': `${branding.borderRadius}px`,
-      } as React.CSSProperties}
-      className="font-body antialiased selection:bg-primary/30 min-h-screen flex flex-col no-scrollbar"
-    >
-      <Navbar />
-        <main className="flex-grow">
-          <AnimatePresence mode="wait">
-            <div key={pathname}>
-              {children}
-            </div>
-          </AnimatePresence>
-        </main>
-      <footer className="bg-accent text-accent-foreground py-16 border-t border-white/5 mt-auto">
-        <div className="container mx-auto px-6 text-center">
-          <p className="font-serif text-3xl font-bold mb-4 tracking-tighter">Mi Cocina Digital</p>
-          <div className="w-12 h-[1px] bg-primary/40 mx-auto mb-6"></div>
-          <p className="opacity-50 text-xs uppercase tracking-[0.3em] font-bold">© {new Date().getFullYear()} — Excelencia Gastronómica</p>
-        </div>
-      </footer>
-      <CartDrawer />
-      <Toaster />
-    </body>
-  );
-}
+export const metadata: Metadata = {
+  metadataBase: new URL("https://micosinadigital.com"), // Reemplaza con tu dominio
+  title: {
+    default: "Mi Cocina Digital | Menú y Pedidos",
+    template: `%s | Mi Cocina Digital`,
+  },
+  description: "Explora nuestro menú y ordena deliciosos platillos a domicilio.",
+  openGraph: {
+    title: "Mi Cocina Digital | Menú y Pedidos",
+    description: "Explora nuestro menú y ordena deliciosos platillos a domicilio.",
+    url: "https://micosinadigital.com", // Reemplaza con tu dominio
+    siteName: "Mi Cocina Digital",
+    images: [
+      {
+        url: "/og-image.png", // Asegúrate de tener esta imagen en tu carpeta public
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: "es_ES",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Mi Cocina Digital | Menú y Pedidos",
+    description: "Explora nuestro menú y ordena deliciosos platillos a domicilio.",
+    images: ["/og-image.png"], // Asegúrate de tener esta imagen en tu carpeta public
+  },
+};
 
 export default function RootLayout({
   children,
@@ -46,16 +43,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="scroll-smooth">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet" />
-        <title>Mi Cocina Digital | Premium</title>
-      </head>
-      <AppProvider>
-        <BrandingWrapper>{children}</BrandingWrapper>
-      </AppProvider>
+    <html lang="es">
+      <body className={inter.className}>
+        <Navbar />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }

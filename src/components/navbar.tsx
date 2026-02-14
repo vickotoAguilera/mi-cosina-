@@ -39,6 +39,12 @@ export function Navbar() {
           <Link href="/#menu" className="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors">
             Menú
           </Link>
+           <Link href="/about" className="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors">
+            Acerca de
+          </Link>
+          <Link href="/contact" className="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors">
+            Contacto
+          </Link>
           
           {isAdmin && (
             <Link href="/admin" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary hover:text-primary/80 transition-colors">

@@ -16,7 +16,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ producto, isLarge = false }: ProductCardProps) {
-  const { role, addToCart } = useAppContext();
+  const { role, addToCart, features } = useAppContext();
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   
@@ -27,7 +27,7 @@ export function ProductCard({ producto, isLarge = false }: ProductCardProps) {
   const sy = useSpring(mouseY, springConfig);
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!cardRef.current) return;
+    if (!features.luxuryAnimations || !cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
@@ -54,7 +54,7 @@ export function ProductCard({ producto, isLarge = false }: ProductCardProps) {
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      style={{ x: sx, y: sy }}
+      style={features.luxuryAnimations ? { x: sx, y: sy } : {}}
       className="h-full"
     >
       <Card className={`relative h-full overflow-hidden group border-none bg-secondary/30 backdrop-blur-md rounded-[2.5rem] transition-all duration-700 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] ${!producto.activo ? 'grayscale opacity-60' : ''}`}>
@@ -88,16 +88,19 @@ export function ProductCard({ producto, isLarge = false }: ProductCardProps) {
                   {producto.nombre}
                 </h3>
               </div>
-              <div className="bg-white/10 backdrop-blur-xl px-4 py-2 rounded-2xl border border-white/20 flex flex-col items-end">
-                {producto.precioOferta && (
-                  <span className="text-[10px] text-white/50 line-through">
-                    ${producto.precio.toFixed(2)}
+              
+              {features.showPrices && (
+                <div className="bg-white/10 backdrop-blur-xl px-4 py-2 rounded-2xl border border-white/20 flex flex-col items-end">
+                  {producto.precioOferta && (
+                    <span className="text-[10px] text-white/50 line-through">
+                      ${producto.precio.toFixed(2)}
+                    </span>
+                  )}
+                  <span className="text-white font-bold tracking-tighter">
+                    ${(producto.precioOferta || producto.precio).toFixed(2)}
                   </span>
-                )}
-                <span className="text-white font-bold tracking-tighter">
-                  ${(producto.precioOferta || producto.precio).toFixed(2)}
-                </span>
-              </div>
+                </div>
+              )}
             </div>
 
             {isLarge && (
@@ -126,7 +129,7 @@ export function ProductCard({ producto, isLarge = false }: ProductCardProps) {
                     <Trash2 className="w-4 h-4" strokeWidth={1} />
                   </Button>
                 </div>
-              ) : (
+              ) : features.enableCart && (
                 <motion.div 
                   className="w-full"
                   whileHover={producto.activo ? { scale: 1.02 } : {}}

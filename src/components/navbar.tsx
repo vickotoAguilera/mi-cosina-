@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function Navbar() {
-  const { role, cart, rotateRole, setCartOpen } = useAppContext();
+  const { role, cart, rotateRole, setCartOpen, features } = useAppContext();
   
   const totalItems = cart.reduce((acc, item) => acc + item.cantidad, 0);
   const isAdmin = role === 'ADMIN';
@@ -53,41 +53,45 @@ export function Navbar() {
             </Button>
           </div>
 
-          <button 
-            onClick={() => setCartOpen(true)}
-            className="relative group transition-transform active:scale-90"
-          >
-            <div className="p-3 rounded-full bg-accent/5 group-hover:bg-accent/10 transition-colors">
-              <ShoppingCart className="w-6 h-6 stroke-1" />
-            </div>
-            <AnimatePresence>
-              {totalItems > 0 && (
-                <motion.span 
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0 }}
-                  className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full ring-4 ring-background shadow-lg"
-                >
-                  {totalItems}
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </button>
+          {features.enableCart && (
+            <button 
+              onClick={() => setCartOpen(true)}
+              className="relative group transition-transform active:scale-90"
+            >
+              <div className="p-3 rounded-full bg-accent/5 group-hover:bg-accent/10 transition-colors">
+                <ShoppingCart className="w-6 h-6 stroke-1" />
+              </div>
+              <AnimatePresence>
+                {totalItems > 0 && (
+                  <motion.span 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full ring-4 ring-background shadow-lg"
+                  >
+                    {totalItems}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </button>
+          )}
         </div>
 
         {/* Móvil */}
         <div className="md:hidden flex items-center gap-4">
-          <button 
-            onClick={() => setCartOpen(true)}
-            className="relative p-2"
-          >
-            <ShoppingCart className="w-6 h-6 stroke-1" />
-            {totalItems > 0 && (
-              <span className="absolute top-0 right-0 bg-primary text-primary-foreground text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
-                {totalItems}
-              </span>
-            )}
-          </button>
+          {features.enableCart && (
+            <button 
+              onClick={() => setCartOpen(true)}
+              className="relative p-2"
+            >
+              <ShoppingCart className="w-6 h-6 stroke-1" />
+              {totalItems > 0 && (
+                <span className="absolute top-0 right-0 bg-primary text-primary-foreground text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+          )}
           <Button variant="ghost" size="sm" onClick={rotateRole} className="text-[10px] font-bold h-9 px-3 border border-border rounded-full">
             {role}
           </Button>

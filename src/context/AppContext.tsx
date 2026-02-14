@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { MenuItem, MENU_MOCK } from '@/constants/mockData';
+import { AppFeatures, INITIAL_FEATURES } from '@/config/appFeatures';
 
 export type UserRole = 'GUEST' | 'USER' | 'ADMIN';
 
@@ -17,6 +18,7 @@ interface AppContextType {
   role: UserRole;
   cart: CartItem[];
   menu: MenuItem[];
+  features: AppFeatures;
   isCartOpen: boolean;
   setRole: (role: UserRole) => void;
   setCartOpen: (open: boolean) => void;
@@ -26,6 +28,7 @@ interface AppContextType {
   clearCart: () => void;
   rotateRole: () => void;
   updateProduct: (product: MenuItem) => void;
+  updateFeature: (key: keyof AppFeatures, value: boolean) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -34,6 +37,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [role, setRoleState] = useState<UserRole>('GUEST');
   const [cart, setCartState] = useState<CartItem[]>([]);
   const [menu, setMenuState] = useState<MenuItem[]>([]);
+  const [features, setFeaturesState] = useState<AppFeatures>(INITIAL_FEATURES);
   const [isCartOpen, setCartOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -41,6 +45,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const savedRole = localStorage.getItem('mc_role') as UserRole;
     const savedCart = localStorage.getItem('mc_cart');
     const savedMenu = localStorage.getItem('mc_menu');
+    const savedFeatures = localStorage.getItem('mc_features');
 
     if (savedRole) setRoleState(savedRole);
     if (savedCart) setCartState(JSON.parse(savedCart));
@@ -49,6 +54,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     } else {
       setMenuState(MENU_MOCK);
     }
+    if (savedFeatures) setFeaturesState(JSON.parse(savedFeatures));
     
     setIsHydrated(true);
   }, []);
@@ -58,8 +64,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('mc_role', role);
       localStorage.setItem('mc_cart', JSON.stringify(cart));
       localStorage.setItem('mc_menu', JSON.stringify(menu));
+      localStorage.setItem('mc_features', JSON.stringify(features));
     }
-  }, [role, cart, menu, isHydrated]);
+  }, [role, cart, menu, features, isHydrated]);
 
   const rotateRole = () => {
     const roles: UserRole[] = ['GUEST', 'USER', 'ADMIN'];
@@ -69,6 +76,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const addToCart = (newItem: CartItem) => {
+    if (!features.enableCart) return;
     setCartState(prev => {
       const existing = prev.find(i => i.id === newItem.id);
       if (existing) {
@@ -99,11 +107,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setMenuState(prev => prev.map(item => item.id === updatedProduct.id ? updatedProduct : item));
   };
 
+  const updateFeature = (key: keyof AppFeatures, value: boolean) => {
+    setFeaturesState(prev => ({ ...prev, [key]: value }));
+  };
+
   return (
     <AppContext.Provider value={{ 
       role, 
       cart, 
       menu,
+      features,
       isCartOpen, 
       setRole: setRoleState, 
       setCartOpen, 
@@ -112,7 +125,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       updateQuantity, 
       clearCart, 
       rotateRole,
-      updateProduct
+      updateProduct,
+      updateFeature
     }}>
       {children}
     </AppContext.Provider>

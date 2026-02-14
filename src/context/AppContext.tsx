@@ -14,11 +14,26 @@ export interface CartItem {
   imagen: string;
 }
 
+export interface BrandingConfig {
+  primaryColor: string;
+  backgroundColor: string;
+  borderRadius: number;
+  logoUrl: string;
+}
+
+const INITIAL_BRANDING: BrandingConfig = {
+  primaryColor: '#8a4b38',
+  backgroundColor: '#fdfaf5',
+  borderRadius: 24,
+  logoUrl: '',
+};
+
 interface AppContextType {
   role: UserRole;
   cart: CartItem[];
   menu: MenuItem[];
   features: AppFeatures;
+  branding: BrandingConfig;
   isCartOpen: boolean;
   setRole: (role: UserRole) => void;
   setCartOpen: (open: boolean) => void;
@@ -29,6 +44,7 @@ interface AppContextType {
   rotateRole: () => void;
   updateProduct: (product: MenuItem) => void;
   updateFeature: (key: keyof AppFeatures, value: boolean) => void;
+  updateBranding: (branding: Partial<BrandingConfig>) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -38,6 +54,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [cart, setCartState] = useState<CartItem[]>([]);
   const [menu, setMenuState] = useState<MenuItem[]>([]);
   const [features, setFeaturesState] = useState<AppFeatures>(INITIAL_FEATURES);
+  const [branding, setBrandingState] = useState<BrandingConfig>(INITIAL_BRANDING);
   const [isCartOpen, setCartOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -46,6 +63,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const savedCart = localStorage.getItem('mc_cart');
     const savedMenu = localStorage.getItem('mc_menu');
     const savedFeatures = localStorage.getItem('mc_features');
+    const savedBranding = localStorage.getItem('mc_branding');
 
     if (savedRole) setRoleState(savedRole);
     if (savedCart) setCartState(JSON.parse(savedCart));
@@ -55,6 +73,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setMenuState(MENU_MOCK);
     }
     if (savedFeatures) setFeaturesState(JSON.parse(savedFeatures));
+    if (savedBranding) setBrandingState(JSON.parse(savedBranding));
     
     setIsHydrated(true);
   }, []);
@@ -65,8 +84,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('mc_cart', JSON.stringify(cart));
       localStorage.setItem('mc_menu', JSON.stringify(menu));
       localStorage.setItem('mc_features', JSON.stringify(features));
+      localStorage.setItem('mc_branding', JSON.stringify(branding));
     }
-  }, [role, cart, menu, features, isHydrated]);
+  }, [role, cart, menu, features, branding, isHydrated]);
 
   const rotateRole = () => {
     const roles: UserRole[] = ['GUEST', 'USER', 'ADMIN'];
@@ -111,12 +131,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setFeaturesState(prev => ({ ...prev, [key]: value }));
   };
 
+  const updateBranding = (newBranding: Partial<BrandingConfig>) => {
+    setBrandingState(prev => ({ ...prev, ...newBranding }));
+  };
+
   return (
     <AppContext.Provider value={{ 
       role, 
       cart, 
       menu,
       features,
+      branding,
       isCartOpen, 
       setRole: setRoleState, 
       setCartOpen, 
@@ -126,7 +151,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       clearCart, 
       rotateRole,
       updateProduct,
-      updateFeature
+      updateFeature,
+      updateBranding
     }}>
       {children}
     </AppContext.Provider>

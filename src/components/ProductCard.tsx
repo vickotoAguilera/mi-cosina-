@@ -17,7 +17,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ producto, isLarge = false }: ProductCardProps) {
-  const { role, addToCart, features } = useAppContext();
+  const { role, addToCart, features, branding } = useAppContext();
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   
@@ -58,7 +58,10 @@ export function ProductCard({ producto, isLarge = false }: ProductCardProps) {
       style={features.luxuryAnimations ? { x: sx, y: sy } : {}}
       className="h-full"
     >
-      <Card className={`relative h-full overflow-hidden group border-none bg-secondary/30 backdrop-blur-md rounded-[2.5rem] transition-all duration-700 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] ${!producto.activo ? 'grayscale opacity-60' : ''}`}>
+      <Card 
+        className={`relative h-full overflow-hidden group border-none bg-secondary/30 backdrop-blur-md transition-all duration-700 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] ${!producto.activo ? 'grayscale opacity-60' : ''}`}
+        style={{ borderRadius: `var(--radius-custom)` }}
+      >
         <div className={`relative w-full ${isLarge ? 'h-full' : 'aspect-[4/5]'} overflow-hidden`}>
           <Image
             src={displayImage}
@@ -137,7 +140,8 @@ export function ProductCard({ producto, isLarge = false }: ProductCardProps) {
                 >
                   <Button 
                     disabled={!producto.activo}
-                    className="w-full h-12 rounded-full bg-primary text-white hover:bg-primary/90 transition-all group-hover:shadow-xl group-hover:shadow-primary/20 disabled:bg-white/10 disabled:text-white/40"
+                    className="w-full h-12 rounded-full text-white transition-all group-hover:shadow-xl group-hover:shadow-primary/20 disabled:bg-white/10 disabled:text-white/40"
+                    style={{ backgroundColor: branding.primaryColor }}
                     onClick={() => addToCart({ id: producto.id, nombre: producto.nombre, precio: producto.precioOferta || producto.precio, imagen: producto.imagenes[0], cantidad: 1 })}
                   >
                     <Plus className="w-4 h-4 mr-2" />

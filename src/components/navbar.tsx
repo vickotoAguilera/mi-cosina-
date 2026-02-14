@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { useAppContext } from '@/context/AppContext';
 import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 
 export function Navbar() {
-  const { role, cart, rotateRole, setCartOpen, features } = useAppContext();
+  const { role, cart, rotateRole, setCartOpen, features, branding } = useAppContext();
   
   const totalItems = cart.reduce((acc, item) => acc + item.cantidad, 0);
   const isAdmin = role === 'ADMIN';
@@ -17,7 +18,13 @@ export function Navbar() {
     <nav className="fixed top-0 z-50 w-full bg-background/80 backdrop-blur-xl border-b border-border">
       <div className="container mx-auto px-6 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3 group">
-          <UtensilsCrossed className="w-8 h-8 text-primary transition-transform duration-500 group-hover:rotate-[360deg]" />
+          {branding.logoUrl ? (
+            <div className="relative w-10 h-10 overflow-hidden rounded-lg">
+              <Image src={branding.logoUrl} alt="Logo" fill className="object-contain" />
+            </div>
+          ) : (
+            <UtensilsCrossed className="w-8 h-8 text-primary transition-transform duration-500 group-hover:rotate-[360deg]" />
+          )}
           <span className="font-serif text-2xl lg:text-3xl font-bold text-foreground tracking-tighter">
             Mi Cocina <span className="text-primary italic">Digital</span>
           </span>
